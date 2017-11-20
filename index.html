@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>我的导航</title>
+	<link rel="stylesheet" href="./style.css">
+
+</style>
+</head>
+<body>
+	<header></header>
+	<main>
+		<div class="wrapper" id="board">
+			
+		</div>
+	</main>
+	<footer></footer>
+	<script src="//at.alicdn.com/t/font_453836_k8lnq18bdkt3ayvi.js"></script>
+	<script>
+		// 1. 初始化数据
+		var keys = {
+		'0':{0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+		'1':{0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9 },
+		'2':{0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+		'length':3
+		}
+		var hash = {
+			'w':'weibo.com',
+			'q':'qq.com',
+			'e':'ele.me',
+			'r':'renren.com',
+			't':'tianya.cn',
+			'y':'youtube.com',
+			'u':'uc.cn',
+			'i':'iqiyi.com',
+			'o':'opera.com',
+			'p':undefined,
+			'a':'acfun.tv',
+			's':'sohu.com',
+			'z':'zhihu.com',
+			'm':'www.mcdonalds.com.cn',
+		}
+		// 取出 localStorage 里面的 zzz 对应的 hash
+		var hashInLocalStorage=JSON.parse(localStorage.getItem('zzz') || 'null') 
+		if(hashInLocalStorage){
+			hash = hashInLocalStorage
+		}
+		
+
+		// 2.生成键盘
+		// 遍历 keys ，生成 kbd 标签
+		var index = 0
+		while(index < keys.length){
+			var div1 = document.createElement('div')  // 造一个 div
+			div1.className = 'row'
+			board.appendChild(div1)				  // 把这个 div 放到 main 里面 
+			var row = keys[index]	
+			var index2 = 0
+			while(index2 < row['length']){
+				var kbd1 = document.createElement('kbd')
+				kbd1.className = "key"
+				var span = document.createElement('span')
+				span.textContent=row[index2]
+				span.className='text'
+				kbd1.appendChild(span)
+				var button1 = document.createElement('button')
+				button1.textContent='编辑'
+				button1.id = row[index2]
+				var imgxxx = document.createElement('img')
+				if (hash[row[index2]]) {
+					imgxxx.src='http://'+hash[row[index2]]+'/favicon.ico'
+				}else{
+					imgxxx.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+				}
+				imgxxx.onerror = function(xxx){
+					xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+				}
+
+
+				button1.onclick=function(xzkjcnxlkcjlk){
+					var button2 =xzkjcnxlkcjlk['target']
+					var img2=button2.previousSibling
+					var key = button2['id']
+					var userdefine=prompt('给我一个网址')
+					hash[key] = userdefine   	// hash 变更
+					img2.src= 'http://'+userdefine +'/favicon.ico'
+					img2.onerror = function(xxx){
+						xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+					}
+					localStorage.setItem('zzz',JSON.stringify(hash))
+					
+				}
+				kbd1.appendChild(imgxxx)
+				kbd1.appendChild(button1)
+				div1.appendChild(kbd1)
+				index2 = index2 +1
+			}
+			index = index +1
+		}
+
+		//  3. 监听键盘
+		// 这个 xzkjcnxlkcjlk 函数名包含了你想知道的所有信息
+		document.onkeypress = function(xzkjcnxlkcjlk){
+		var key = (xzkjcnxlkcjlk['key'])
+		var website = hash[key]
+		console.log(website)
+		//location.href = 'http://' + website  当前页面中打开新页面
+		window.open('http://'+website,'_blank')
+
+		}
+	</script>
+</body>
+</html>
