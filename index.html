@@ -41,7 +41,7 @@
 			'm':'www.mcdonalds.com.cn',
 		}
 		// 取出 localStorage 里面的 zzz 对应的 hash
-		var hashInLocalStorage=JSON.parse(localStorage.getItem('zzz') || 'null') 
+		var hashInLocalStorage=getFromLocalStorage('zzz')
 		if(hashInLocalStorage){
 			hash = hashInLocalStorage
 		}
@@ -49,53 +49,23 @@
 
 		// 2.生成键盘
 		// 遍历 keys ，生成 kbd 标签
-		var index = 0
-		while(index < keys.length){
-			var div1 = document.createElement('div')  // 造一个 div
-			div1.className = 'row'
-			board.appendChild(div1)				  // 把这个 div 放到 main 里面 
+		for(var index =0; index < keys.length; index=index+1){
+			var div1 = tag('div',{className:'row'})  
+			board.appendChild(div1)	
+
 			var row = keys[index]	
-			var index2 = 0
-			while(index2 < row['length']){
-				var kbd1 = document.createElement('kbd')
-				kbd1.className = "key"
-				var span = document.createElement('span')
-				span.textContent=row[index2]
-				span.className='text'
-				kbd1.appendChild(span)
-				var button1 = document.createElement('button')
-				button1.textContent='编辑'
-				button1.id = row[index2]
-				var imgxxx = document.createElement('img')
-				if (hash[row[index2]]) {
-					imgxxx.src='http://'+hash[row[index2]]+'/favicon.ico'
-				}else{
-					imgxxx.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
-				}
-				imgxxx.onerror = function(xxx){
-					xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
-				}
+			for (var index2 =0; index2 < row['length']; index2=index2+1){
+				var span = tag('span',{textContent:row[index2],className:'text'})
+				var imgxxx = createImage(hash[row[index2]])
+				button1 = createButton(row[index2])
 
-
-				button1.onclick=function(xzkjcnxlkcjlk){
-					var button2 =xzkjcnxlkcjlk['target']
-					var img2=button2.previousSibling
-					var key = button2['id']
-					var userdefine=prompt('给我一个网址')
-					hash[key] = userdefine   	// hash 变更
-					img2.src= 'http://'+userdefine +'/favicon.ico'
-					img2.onerror = function(xxx){
-						xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
-					}
-					localStorage.setItem('zzz',JSON.stringify(hash))
-					
-				}
+				var kbd1 = tag('kbd',{className:"key"})
 				kbd1.appendChild(imgxxx)
 				kbd1.appendChild(button1)
+				kbd1.appendChild(span)
+
 				div1.appendChild(kbd1)
-				index2 = index2 +1
 			}
-			index = index +1
 		}
 
 		//  3. 监听键盘
@@ -106,8 +76,50 @@
 		console.log(website)
 		//location.href = 'http://' + website  当前页面中打开新页面
 		window.open('http://'+website,'_blank')
-
 		}
+
+
+		// 4. 相关函数支持
+		function getFromLocalStorage(name){
+			return JSON.parse(localStorage.getItem(name) || 'null')
+		}
+		function tag(tagname,attributes){
+			var element= document.createElement(tagname)
+			for (var key in attributes){
+				element[key] = attributes[key]
+			}
+			return element
+		}
+		function createImage(domain){
+			var imgxxx = tag('img',{})
+			if (domain) {
+				imgxxx.src='http://'+domain+'/favicon.ico'
+			}else{
+				imgxxx.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+			}
+			imgxxx.onerror = function(xxx){
+				xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+			}
+			return imgxxx
+		}
+		function createButton(myid){
+			var button1 = tag('button',{textContent:'编辑',id:myid})
+			button1.onclick=function(xzkjcnxlkcjlk){
+			var button2 =xzkjcnxlkcjlk['target']
+			var img2=button2.previousSibling
+			var key = button2['id']
+			var userdefine=prompt('给我一个网址')
+			hash[key] = userdefine   	// hash 变更
+			img2.src= 'http://'+userdefine +'/favicon.ico'
+			img2.onerror = function(xxx){
+				xxx.target.src='http://ozp6nmbl9.bkt.clouddn.com/point.png'
+			}
+			localStorage.setItem('zzz',JSON.stringify(hash))	
+			}
+			return button1
+		}
+		
+
 	</script>
 </body>
 </html>
